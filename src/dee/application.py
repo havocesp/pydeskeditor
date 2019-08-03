@@ -423,6 +423,7 @@ class Application(object):
         self._update_basic_tab()
 
         # populate advanced tab
+        self._update_advanced_tab()
 
         # load file into source view
         self._update_source_tab()
