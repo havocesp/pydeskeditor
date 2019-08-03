@@ -20,7 +20,6 @@ from dee.exceptiondialog import ExceptionDialog
 from xdg.Exceptions import  ParsingError, ValidationError
 from xdg.BaseDirectory import xdg_data_dirs, xdg_data_home
 
-
 SETTINGS_SCHEMA = "apps.desktop-entry-editor"
 
 logging.basicConfig()
@@ -348,10 +347,17 @@ class Application(object):
             ('Validate', None, "Validate", None, None,
                 self.on_tools_validate_activate),
         ])
+        self._delete_actions = Gtk.ActionGroup("DeleteActions")
+        self._delete_actions.add_actions([
+            ('Delete', Gtk.STOCK_DELETE, None, None, "Delete file",
+                self.on_file_delete_activate),
+        ])
+        self._delete_actions.set_sensitive(False)
 
         manager.insert_action_group(self._app_actions)
         manager.insert_action_group(self._save_actions)
         manager.insert_action_group(self._open_actions)
+        manager.insert_action_group(self._delete_actions)
 
         ui_file = os.path.join(self.UI_DIR, 'menu_toolbar.ui')
         manager.add_ui_from_file(ui_file)
@@ -449,7 +455,7 @@ class Application(object):
         for path in xdg_data_dirs:
             path = os.path.join(path, "applications")
             logger.debug("Loading desktop entries from %s" % path)
-            for desktop_file in glob.glob(os.path.join(path, "*.desktop")):
+            for desktop_file in glob.glob(os.path.join(path, u'*.desktop')):
                 #logger.debug(desktop_file)
                 try:
                     entry = Entry(desktop_file)
@@ -534,6 +540,9 @@ class Application(object):
 
     def on_file_save_activate(self, action, data=None):
         self.save_file(self._entry.filename)
+
+    def on_file_delete_activate(self, action, data=None):
+        self.delete_file(self._entry.filename)
 
     def on_file_save_as_activate(self, action, data=None):
         filename = self.save_dialog()
@@ -758,6 +767,17 @@ class Application(object):
         self.set_modified(False)
         self._load_desktop_entry_ui()
 
+    def delete_file(self, filename):
+        # TODO confirm user wants to delete
+        if (filename):
+            os.remove(filename)
+        # find and remove selected row (showing the deleted entry) from treeview
+        selection = self._treeview.get_selection()
+        model, iter = selection.get_selected()
+        model.remove(iter)
+        self.set_modified(False)
+        self._load_desktop_entry_ui()
+
     def set_modified(self, modified=True):
         """
         Set the modified flag on the entry and update the titlebar
@@ -881,3 +901,10 @@ class Application(object):
             self._save_actions.set_sensitive(True)
         else:
             self._save_actions.set_sensitive(False)
+
+        # delete button
+        if entry and not entry.isReadOnly():
+            self._delete_actions.set_sensitive(True)
+        else:
+            self._delete_actions.set_sensitive(False)
+

@@ -7,6 +7,8 @@
       <menuitem action="Save"/>
       <menuitem action="SaveAs"/>
       <separator/>
+      <menuitem action="Delete"/>
+      <separator/>
       <menuitem action="Close"/>
       <separator/>
       <menuitem action="Quit"/>
@@ -28,6 +30,7 @@
     <toolitem action="New"/>
     <toolitem action="Open"/>
     <toolitem action="Save"/>
+    <toolitem action="Delete"/>
     <separator/>
     <toolitem action="Refresh"/>
   </toolbar>
