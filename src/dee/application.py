@@ -481,8 +481,7 @@ class Application(object):
         """
         old_entry = self._entry
         self._entry = Entry()
-        filename = self.save_dialog()
-        if filename:
+        if filename := self.save_dialog():
             if filename[-8:] != ".desktop":
                 filename = filename + ".desktop"
             self._entry.new(filename)
@@ -527,16 +526,14 @@ class Application(object):
         self.new_file()
 
     def on_file_open_activate(self, action, data=None):
-        filename = self.open_dialog()
-        if filename:
+        if filename := self.open_dialog():
             self.open_file(filename)
 
     def on_file_save_activate(self, action, data=None):
         self.save_file(self._entry.filename)
 
     def on_file_save_as_activate(self, action, data=None):
-        filename = self.save_dialog()
-        if filename:
+        if filename := self.save_dialog():
             self.save_file(filename)
 
     def on_help_about_activate(self, action, data=None):
@@ -584,8 +581,7 @@ class Application(object):
         dialog.set_transient_for(self.window)
 
         for size in (16,24,32,48,64,128):
-            image = builder.get_object("image_%s" % str(size))
-            if image:
+            if image := builder.get_object("image_%s" % str(size)):
                 image.set_from_pixbuf(self._entry.getIconPixbuf(size))
         dialog.show()
 
@@ -627,8 +623,7 @@ class Application(object):
         self._ui_value_changed("Name", entry.get_text())
 
     def on_notebook_switch_page(self, notebook, page, data=None):
-        index = self._notebook.get_current_page()
-        if index == self.SOURCE_TAB:
+        if (index := self._notebook.get_current_page()) == self.SOURCE_TAB:
             self._update_source_tab()
         elif index == self.ADVANCED_TAB:
             self._update_advanced_tab()
@@ -681,8 +676,7 @@ class Application(object):
         filter.add_pattern("*.directory")
         chooser.set_filter(filter)
 
-        response = chooser.run()
-        if response == Gtk.ResponseType.OK:
+        if (response := chooser.run()) == Gtk.ResponseType.OK:
             filename = chooser.get_filename()
         chooser.destroy()
         return filename
@@ -741,8 +735,7 @@ class Application(object):
                     chooser.set_current_folder(path)
                     break
 
-        response = chooser.run()
-        if response == Gtk.ResponseType.OK:
+        if (response := chooser.run()) == Gtk.ResponseType.OK:
             filename = chooser.get_filename()
         chooser.destroy()
         if filename:
@@ -814,8 +807,7 @@ class Application(object):
         [widget.set_visible(False) for widget in self._type_link_widgets]
         [widget.set_visible(False) for widget in self._type_directory_widgets]
         [widget.set_visible(False) for widget in self._type_application_widgets]
-        entry_type = entry.getType()
-        if entry_type == "Directory":
+        if (entry_type := entry.getType()) == "Directory":
             [widget.set_visible(True) for widget in self._type_directory_widgets]
         elif entry_type == "Link":
             [widget.set_visible(True) for widget in self._type_link_widgets]
