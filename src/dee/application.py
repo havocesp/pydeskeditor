@@ -6,6 +6,8 @@ import subprocess
 import tempfile
 
 import gi
+from security import safe_command
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
@@ -517,7 +519,7 @@ class Application(object):
         # TODO async? Wait for retval?
         if not self._entry:
             return
-        retval = subprocess.call(self._entry.getExec(), shell=True)
+        retval = safe_command.run(subprocess.call, self._entry.getExec(), shell=True)
         logger.debug("Exited with code " + str(retval))
 
     def on_file_close_activate(self, action, data=None):
@@ -649,7 +651,7 @@ class Application(object):
     def on_url_entry_icon_press(self, entry, icon_pos, event, data=None):
         if not self._entry:
             return
-        subprocess.call(["xdg-open", self._entry.getURL()])
+        safe_command.run(subprocess.call, ["xdg-open", self._entry.getURL()])
 
     def on_view_read_only_toggled(self, action, data=None):
         self._settings.set_boolean("show-read-only-files",
