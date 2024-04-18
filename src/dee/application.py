@@ -149,7 +149,7 @@ class Application(object):
         self.UI_DIR = os.path.join(data_dir, 'ui')
 
         logger.debug("-"*60)
-        logger.debug("  %s %s" % (self.PACKAGE, self.VERSION))
+        logger.debug("  %s %s", self.PACKAGE, self.VERSION)
         logger.debug("  DATA DIR: " + self.DATA_DIR)
         logger.debug("-"*60)
 
@@ -447,7 +447,7 @@ class Application(object):
         show_ro = self._settings.get_boolean('show-read-only-files')
         for path in xdg_data_dirs:
             path = os.path.join(path, "applications")
-            logger.debug("Loading desktop entries from %s" % path)
+            logger.debug("Loading desktop entries from %s", path)
             for desktop_file in glob.glob(os.path.join(path, "*.desktop")):
                 #logger.debug(desktop_file)
                 try:
@@ -518,7 +518,7 @@ class Application(object):
         if not self._entry:
             return
         retval = subprocess.call(self._entry.getExec(), shell=True)
-        logger.debug("Exited with code " + str(retval))
+        logger.debug("Exited with code %s", str(retval))
 
     def on_file_close_activate(self, action, data=None):
         self.close_file()
