@@ -517,7 +517,7 @@ class Application(object):
         # TODO async? Wait for retval?
         if not self._entry:
             return
-        retval = subprocess.call(self._entry.getExec(), shell=True)
+        retval = subprocess.call(self._entry.getExec(), shell=False)
         logger.debug("Exited with code " + str(retval))
 
     def on_file_close_activate(self, action, data=None):
