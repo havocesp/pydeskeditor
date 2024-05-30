@@ -79,7 +79,7 @@ class Application(object):
 
     def error_dialog(self, message):
         """ Display a very basic error dialog. """
-        logger.warn(message)
+        logger.warning(message)
         dialog = Gtk.MessageDialog(self.window,
                                    Gtk.DialogFlags.MODAL |
                                    Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -453,7 +453,7 @@ class Application(object):
                 try:
                     entry = Entry(desktop_file)
                 except ParsingError as e:
-                    logger.warn(e)
+                    logger.warning(e)
                     continue # skip entries with parse errors
 
                 pixbuf = entry.getIconPixbuf(16)
