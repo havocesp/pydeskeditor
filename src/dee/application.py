@@ -6,6 +6,8 @@ import subprocess
 import tempfile
 
 import gi
+from security import safe_command
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Pango', '1.0')
@@ -517,7 +519,7 @@ class Application(object):
         # TODO async? Wait for retval?
         if not self._entry:
             return
-        retval = subprocess.call(self._entry.getExec(), shell=True)
+        retval = safe_command.run(subprocess.call, self._entry.getExec(), shell=True)
         logger.debug("Exited with code " + str(retval))
 
     def on_file_close_activate(self, action, data=None):
